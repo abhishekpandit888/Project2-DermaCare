@@ -11,6 +11,7 @@ async function uploadImage(req, res) {
     // console.log(req.file, req.body);
 
     const imagePath = req.file ? req.file.path : "";
+    console.log(req.body);
     let user = await User.findById(userId);
 
     const diseaseName = req.body.diseaseName;
