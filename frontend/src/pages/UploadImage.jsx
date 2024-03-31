@@ -71,7 +71,7 @@ export default function UploadImage() {
       try {
         const res = await axios.post("http://127.0.0.1:7000/predict", formData);
         console.log(res);
-        formData.append(
+formData        .append(
           "diseaseName",
           res.data.prediction ? res.data.prediction : "Model error"
         );

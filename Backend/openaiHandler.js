@@ -1,33 +1,27 @@
-import axios from 'axios';
-import dotenv from 'dotenv';
-
+import dotenv from "dotenv";
 dotenv.config();
 
-const getDiagnosis = async (prompt) => {
-  try {
-    const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const requestData = {
-      model: 'gpt-3.5-turbo',
-      messages: [
-        { role: 'system', content: 'You are a dermatologist.' },
-        { role: 'user', content: prompt },
-      ],
-      temperature: 0.7,
-    };
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-    };
+// Access your API key as an environment variable (see "Set up your API key" above)
+const genAI = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 
-    const response = await axios.post(apiUrl, requestData, { headers });
-    const diagnosis = response.data.choices[0].message.content;
+async function getDiagnosis(req, res) {
+  // For text-only input, use the gemini-pro model
+  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-    return diagnosis;
-  } catch (error) {
-    console.error('Error:', error);
-    throw new Error('Failed to get diagnosis from OpenAI API');
-  }
-};
+  const disease = "acne";
+
+  // Call the getDiagnosis function for each prompt
+  const prompt = `Provide 5 key points about ${disease}.List 5 medicines commonly used to treat ${disease}.Outline 5 preventive measures against ${disease}.Share 5 effective home remedies for ${disease}.`;
+
+  // const prompt = "Write a story about a magic backpack."
+
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  const text = response.text();
+  // console.log(text);
+  return text;
+}
 
 export default getDiagnosis;

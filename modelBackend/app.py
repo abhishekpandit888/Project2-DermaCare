@@ -12,7 +12,7 @@ CORS(app)
 class_names = ['Psoriasis pictures Lichen Planus and related diseases','vitiligo','Acne and Rosacea Photos','Normal','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
 
 # Load saved model
-model = tf.keras.models.load_model('skin_model_74acc.h5')
+model = tf.keras.models.load_model('model/skinmodel74acc.h5')
 vgg_model = tf.keras.applications.VGG19(weights = 'imagenet',  include_top = False, input_shape = (180, 180, 3)) 
 
 # Function to preprocess image
@@ -76,6 +76,8 @@ def predictEndpoint():
         os.remove(temp_image_path)
 
         result = {"prediction": predicted_class_name}
+
+        print(result)
         return jsonify(result)
 
     except Exception as e:
